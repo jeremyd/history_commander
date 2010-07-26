@@ -1,7 +1,9 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe "HistoryCommander" do
-  it "fails" do
-    fail "hey buddy, you should probably rename this file and start specing for real"
+  it "is cool" do
+    EM.run do
+      HistWatch.start
+    end
   end
 end
