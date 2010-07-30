@@ -8,6 +8,11 @@ require 'tmpdir'
   opt :daemonize, "run in daemon mode (default)", :default => true
   opt :foreground, "run in foreground", :default => false
   opt :amqp_host, "hostname of AMQP server", :default => "ec2-184-72-19-157.us-west-1.compute.amazonaws.com"
+  opt :mode, "operate in 'full' read/write (sync) mode.  This requires read/write AMQP permissions and is the default.  Or operate in 'writeonly' mode for collection of commands only.", :type => :string, :default => "full"
+  opt :user, "AMQP username", :type => :string, :default => "guest"
+  opt :pass, "AMQP pass", :type => :string, :default => "guest"
+  opt :vhost, "AMQP vhost", :type => :string, :default => "/"
+  opt :amqp_log, "AMQP verbose logging", :default => false, :short => "-l"
 end
 
 @@options[:daemonize] = false if @@options[:foreground]
@@ -19,8 +24,8 @@ if @@options[:daemonize]
     SimpleDaemon::WORKING_DIRECTORY = Dir.tmpdir
     def self.start
       EM.run do
-        AMQP.start(:host => @@options[:amqp_host]) do
-          HistWatch.start
+        AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost]) do
+          HistWatch.start(@@options[:mode])
         end
       end
     end
@@ -34,8 +39,8 @@ if @@options[:daemonize]
 else
   puts "History Commander running in foreground mode. CTRL-C to interrupt"
   EM.run do
-    AMQP.start(:host => @@options[:amqp_host] ) do
-      HistWatch.start
+    AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost], :logging => @@options[:verbose]) do
+      HistWatch.start(@@options[:mode])
     end
   end
 end

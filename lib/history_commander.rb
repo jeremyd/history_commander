@@ -38,11 +38,11 @@ class HistoryCommander < EventMachine::FileTail
                   :message => line,
                   :host => @host,
                   :user => @user }
-                  
+      puts "sending: #{payload}"            
       @global_history_fanout.publish(payload.to_json)
     end
   end
-  
+
   # Subscribe to the global history exchange and sync the history file with any new inbound global history.  Pauses FileTail and skips the output when writing to the history file.
   def subscribe 
     @subscription = MQ.new
@@ -63,8 +63,8 @@ end
 # HistWatch is a wrapper class for starting EM and loading configuration information for History Commander
 class HistWatch
   # starts
-  def self.start(file = File.join(File.expand_path('~'), ".bash_history"))
-    @hist_file_watch = EventMachine::file_tail(file, HistoryCommander)
+  def self.start(mode="full", file = File.join(File.expand_path('~'), ".bash_history"))
+    @hist_file_watch = EventMachine::file_tail(file, HistoryCommander, -1, mode)
   end
 
   def self.stop
