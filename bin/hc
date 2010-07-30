@@ -1,5 +1,41 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'history_commander'
+require 'trollop'
+require 'tmpdir'
 
-HistWatch.start
+@@options = Trollop::options do
+  opt :daemonize, "run in daemon mode (default)", :default => true
+  opt :foreground, "run in foreground", :default => false
+  opt :amqp_host, "hostname of AMQP server", :default => "ec2-184-72-19-157.us-west-1.compute.amazonaws.com"
+end
+
+@@options[:daemonize] = false if @@options[:foreground]
+
+if @@options[:daemonize] 
+  puts "Logging to #{Dir.tmpdir}/HistoryCommanderDaemon.log"
+  require 'simple-daemon'
+  class HistoryCommanderDaemon < SimpleDaemon::Base
+    SimpleDaemon::WORKING_DIRECTORY = Dir.tmpdir
+    def self.start
+      EM.run do
+        AMQP.start(:host => @@options[:amqp_host]) do
+          HistWatch.start
+        end
+      end
+    end
+
+    def self.stop
+      EM.stop
+      puts "Stopping History Commander" 
+    end
+  end
+  HistoryCommanderDaemon.daemonize
+else
+  puts "History Commander running in foreground mode. CTRL-C to interrupt"
+  EM.run do
+    AMQP.start(:host => @@options[:amqp_host] ) do
+      HistWatch.start
+    end
+  end
+end

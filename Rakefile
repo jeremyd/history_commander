@@ -5,11 +5,17 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "history_commander"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = "jeremy@rightscale.com"
+    gem.summary = %Q{Take command of your shell history!}
+    gem.description = %Q{History Commander is a program designed to keep your shell history in sync across all installations. }
+    gem.email = "jeremy@rubyonlinux.org"
     gem.homepage = "http://github.com/jeremyd/history_commander"
     gem.authors = ["Jeremy Deininger"]
+    gem.add_dependency "eventmachine"
+    gem.add_dependency "eventmachine-tail"
+    gem.add_dependency "amqp"
+    gem.add_dependency "json"
+    gem.add_dependency "simple-daemon"
+    gem.add_dependency "trollop"
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

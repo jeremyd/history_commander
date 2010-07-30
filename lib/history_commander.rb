@@ -5,6 +5,7 @@ require 'eventmachine-tail'
 require 'mq'
 require 'uuidtools'
 require 'mash'
+require 'fileutils'
 
 class HistoryCommander < EventMachine::FileTail
   attr_accessor :uuid
@@ -14,6 +15,9 @@ class HistoryCommander < EventMachine::FileTail
     "#{path}_safe"
   end
 
+  # path <~String> File path to monitor
+  # mode <~String> Can be set to "full" for read/write mode, and any other value for write only mode.
+  # startpos <~Integer> File position to start tailing the file. Default of -1 starts at the end of the file
   def initialize(path, startpos=-1, mode="full")
     super(path, startpos)
     FileUtils.cp(path, safe_path)
@@ -26,6 +30,8 @@ class HistoryCommander < EventMachine::FileTail
     subscribe if mode == "full"
   end
 
+  # Receive data from the FileTail and submit it
+  # to the MQ
   def receive_data(data)
     @buffer.extract(data).each do |line|
       payload = { :uuid => @uuid, 
@@ -37,6 +43,7 @@ class HistoryCommander < EventMachine::FileTail
     end
   end
   
+  # Subscribe to the global history exchange and sync the history file with any new inbound global history.  Pauses FileTail and skips the output when writing to the history file.
   def subscribe 
     @subscription = MQ.new
     @subscription.queue(@uuid).bind(@subscription.fanout('global_history')).subscribe do |result|
@@ -51,10 +58,11 @@ class HistoryCommander < EventMachine::FileTail
       end
     end
   end
-
 end
 
+# HistWatch is a wrapper class for starting EM and loading configuration information for History Commander
 class HistWatch
+  # starts
   def self.start(file = File.join(File.expand_path('~'), ".bash_history"))
     @hist_file_watch = EventMachine::file_tail(file, HistoryCommander)
   end
