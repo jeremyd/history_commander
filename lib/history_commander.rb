@@ -38,7 +38,6 @@ class HistoryCommander < EventMachine::FileTail
                   :message => line,
                   :host => @host,
                   :user => @user }
-      puts "sending: #{payload}"            
       @global_history_fanout.publish(payload.to_json)
     end
   end

@@ -39,7 +39,7 @@ if @@options[:daemonize]
 else
   puts "History Commander running in foreground mode. CTRL-C to interrupt"
   EM.run do
-    AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost], :logging => @@options[:verbose]) do
+    AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost], :logging => @@options[:amqp_log]) do
       HistWatch.start(@@options[:mode])
     end
   end
