@@ -6,7 +6,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "history_commander"
     gem.summary = %Q{Take command of your shell history!}
-    gem.description = %Q{History Commander is a program designed to keep your shell history in sync across all installations. }
+    gem.description = %Q{History Commander is a program designed to keep your shell history in sync across all your nodes. }
     gem.email = "jeremy@rubyonlinux.org"
     gem.homepage = "http://github.com/jeremyd/history_commander"
     gem.authors = ["Jeremy Deininger"]
@@ -16,6 +16,7 @@ begin
     gem.add_dependency "json"
     gem.add_dependency "simple-daemon"
     gem.add_dependency "trollop"
+    gem.add_dependency "highline"
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

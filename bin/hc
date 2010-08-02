@@ -29,7 +29,7 @@ if @@options[:daemonize]
     SimpleDaemon::WORKING_DIRECTORY = Dir.tmpdir
     def self.start
       EM.run do
-        AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost], :logging => @@options[:amqp_log)) do
+        AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost], :logging => @@options[:amqp_log]) do
           HistWatch.start(@@options[:mode])
         end
       end

@@ -42,6 +42,20 @@ class HistoryCommander < EventMachine::FileTail
     end
   end
 
+  def schedule_next_read
+    unless @pause
+      EventMachine::add_timer(@naptime) do
+        read
+      end
+    end
+  end
+
+  def skip_ahead
+    def skip_ahead
+      @pos = @file.sysseek(0, IO::SEEK_END)
+    end
+  end
+
   # Subscribe to the global history exchange and sync the history file with any new inbound global history.  Pauses FileTail and skips the output when writing to the history file.
   def subscribe 
     @subscription = MQ.new
