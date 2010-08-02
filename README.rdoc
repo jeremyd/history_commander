@@ -1,5 +1,13 @@
 = history_commander
 
+== Description
+ 
+History Commander is a ruby daemon that provides bash users with a global shared command line history.  All commands that history commander collects will be sent to all nodes for use with reverse history search in all bash shells.  It can also be used in monitor only mode (writeonly) where the bash history is only collected, not synchronized.
+
+== Requirements
+
+History Commander requires the use of an AMQP server.  Credentials, host, and vhost must be configured for use.
+
 == Quick Start
 
   'gem install history_commander'

@@ -6,7 +6,7 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "history_commander"
     gem.summary = %Q{Take command of your shell history!}
-    gem.description = %Q{History Commander is a program designed to keep your shell history in sync across all your nodes. }
+    gem.description = %Q{ History Commander is a ruby daemon that provides bash users with a global shared command line history.  All commands that history commander collects will be sent to all nodes for use with reverse history search in all bash shells.  It can also be used in monitor only mode (writeonly) where the bash history is only collected, not synchronized. }
     gem.email = "jeremy@rubyonlinux.org"
     gem.homepage = "http://github.com/jeremyd/history_commander"
     gem.authors = ["Jeremy Deininger"]
