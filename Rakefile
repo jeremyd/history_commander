@@ -17,6 +17,7 @@ begin
     gem.add_dependency "simple-daemon"
     gem.add_dependency "trollop"
     gem.add_dependency "highline"
+    gem.add_dependency "mash"
     gem.add_development_dependency "rspec", ">= 1.2.9"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

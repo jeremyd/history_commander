@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{history_commander}
-  s.version = "0.0.1"
+  s.version = "0.0.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy Deininger"]
@@ -55,6 +55,7 @@ Gem::Specification.new do |s|
       s.add_runtime_dependency(%q<simple-daemon>, [">= 0"])
       s.add_runtime_dependency(%q<trollop>, [">= 0"])
       s.add_runtime_dependency(%q<highline>, [">= 0"])
+      s.add_runtime_dependency(%q<mash>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.9"])
     else
       s.add_dependency(%q<eventmachine>, [">= 0"])
@@ -64,6 +65,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<simple-daemon>, [">= 0"])
       s.add_dependency(%q<trollop>, [">= 0"])
       s.add_dependency(%q<highline>, [">= 0"])
+      s.add_dependency(%q<mash>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 1.2.9"])
     end
   else
@@ -74,6 +76,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<simple-daemon>, [">= 0"])
     s.add_dependency(%q<trollop>, [">= 0"])
     s.add_dependency(%q<highline>, [">= 0"])
+    s.add_dependency(%q<mash>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 1.2.9"])
   end
 end
