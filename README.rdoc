@@ -1,6 +1,10 @@
 = history_commander
 
-Description goes here.
+== Quick Start
+
+* 'gem install history_commander'
+* 'hc_setup_bashrc'
+* 'hc --help'
 
 == Note on Patches/Pull Requests
  

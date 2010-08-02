@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+## Development ENV only
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+###
+require 'rubygems'
+require 'history_commander/setup_bashrc'
+
+options = Trollop::options do
+  opt :yes, "Do not prompt", :default => false
+end
+
+SetupBashrc.install(options[:yes])

@@ -1,4 +1,9 @@
 #!/usr/bin/env ruby
+
+## Development ENV only
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+###
+
 require 'rubygems'
 require 'history_commander'
 require 'trollop'
@@ -8,7 +13,7 @@ require 'tmpdir'
   opt :daemonize, "run in daemon mode (default)", :default => true
   opt :foreground, "run in foreground", :default => false
   opt :amqp_host, "hostname of AMQP server", :default => "ec2-184-72-19-157.us-west-1.compute.amazonaws.com"
-  opt :mode, "operate in 'full' read/write (sync) mode.  This requires read/write AMQP permissions and is the default.  Or operate in 'writeonly' mode for collection of commands only.", :type => :string, :default => "full"
+  opt :mode, "operate in 'full' read/write (sync) mode -or in 'writeonly' (no sync) mode.  This requires the proper AMQP permissions.", :type => :string, :default => "full"
   opt :user, "AMQP username", :type => :string, :default => "guest"
   opt :pass, "AMQP pass", :type => :string, :default => "guest"
   opt :vhost, "AMQP vhost", :type => :string, :default => "/"
@@ -24,7 +29,7 @@ if @@options[:daemonize]
     SimpleDaemon::WORKING_DIRECTORY = Dir.tmpdir
     def self.start
       EM.run do
-        AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost]) do
+        AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost], :logging => @@options[:amqp_log)) do
           HistWatch.start(@@options[:mode])
         end
       end
