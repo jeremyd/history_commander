@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy Deininger"]
-  s.date = %q{2010-08-01}
-  s.description = %q{History Commander is a program designed to keep your shell history in sync across all your nodes. }
+  s.date = %q{2010-08-02}
+  s.description = %q{ History Commander is a ruby daemon that provides bash users with a global shared command line history.  All commands that history commander collects will be sent to all nodes for use with reverse history search in all bash shells.  It can also be used in monitor only mode (writeonly) where the bash history is only collected, not synchronized. }
   s.email = %q{jeremy@rubyonlinux.org}
   s.executables = ["hc", "hc_setup_bashrc"]
   s.extra_rdoc_files = [
