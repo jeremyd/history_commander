@@ -9,7 +9,7 @@ require 'history_commander'
 require 'trollop'
 require 'tmpdir'
 
-command = ARGV.shift
+command = ARGV[0]
 unless ["start", "stop", "configure"].include?(command)
   puts "Syntax: hc <command> [args] [--help]"
   puts "  command can be 'start', 'stop', or 'configure'"
