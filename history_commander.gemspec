@@ -5,12 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{history_commander}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy Deininger"]
   s.date = %q{2010-08-01}
-  s.description = %q{History Commander is a program designed to keep your shell history in sync across all installations. }
+  s.description = %q{History Commander is a program designed to keep your shell history in sync across all your nodes. }
   s.email = %q{jeremy@rubyonlinux.org}
   s.executables = ["hc", "hc_setup_bashrc"]
   s.extra_rdoc_files = [
@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "VERSION",
      "bin/hc",
      "bin/hc_setup_bashrc",
+     "history_commander.gemspec",
      "lib/history_commander.rb",
      "lib/history_commander/setup_bashrc.rb",
      "spec/history_commander_spec.rb",

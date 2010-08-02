@@ -9,20 +9,60 @@ require 'history_commander'
 require 'trollop'
 require 'tmpdir'
 
+command = ARGV.shift
+unless ["start", "stop", "configure"].include?(command)
+  puts "Syntax: hc <command> [args] [--help]"
+  puts "  command can be 'start', 'stop', or 'configure'"
+end
+
 @@options = Trollop::options do
-  opt :daemonize, "run in daemon mode (default)", :default => true
-  opt :foreground, "run in foreground", :default => false
-  opt :amqp_host, "hostname of AMQP server", :default => "ec2-184-72-19-157.us-west-1.compute.amazonaws.com"
-  opt :mode, "operate in 'full' read/write (sync) mode -or in 'writeonly' (no sync) mode.  This requires the proper AMQP permissions.", :type => :string, :default => "full"
-  opt :user, "AMQP username", :type => :string, :default => "guest"
-  opt :pass, "AMQP pass", :type => :string, :default => "guest"
-  opt :vhost, "AMQP vhost", :type => :string, :default => "/"
+  opt :config, "configuration file to use", :default => File.join(File.expand_path("~"), ".history_commander"), :type => :string
+  opt :foreground, "run in foreground (daemonize is the default)", :default => false
+  opt :amqp_host, "hostname of AMQP server", :type => :string
+  opt :mode, "operate in 'full' read/write (sync) mode -or in 'writeonly' (no sync) mode.  This requires the proper AMQP permissions.", :type => :string
+  opt :user, "AMQP username", :type => :string
+  opt :pass, "AMQP pass", :type => :string
+  opt :vhost, "AMQP vhost", :type => :string
   opt :amqp_log, "AMQP verbose logging", :default => false, :short => "-l"
 end
 
-@@options[:daemonize] = false if @@options[:foreground]
+def check_options
+  [:user, :pass, :vhost, :amqp_host, :mode].each do |req|
+    unless @@options[req]
+      puts "FATAL: you must specify --#{req} in your history_commander config file or on the command line, see --help"
+      exit 1
+    end
+  end
+end
 
-if @@options[:daemonize] 
+if command == "configure"
+  check_options  
+  config_file = @@options[:config]
+  @@options.reject! { |k, v| k.to_s.include?("given") || k == :help || k == :save || k == :config }
+  writeme = @@options.dup
+  File.open(config_file, "w") {|f| f.write(writeme.to_json(:indent => "  ", :object_nl => "\n"))}
+  File.chmod 0600, config_file 
+  puts "wrote config to #{config_file}"
+  exit
+end
+
+if File.exists?(@@options[:config])
+  @@options.reject! { |k, v| v == nil } 
+  saved_opts = JSON::parse(IO.read(@@options[:config])).to_mash
+  passed_in_opts = @@options.to_mash
+  @@options = saved_opts.merge passed_in_opts
+end
+
+check_options  
+
+if @@options[:foreground] 
+  puts "History Commander running in foreground mode. CTRL-C to interrupt"
+  EM.run do
+    AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost], :logging => @@options[:amqp_log]) do
+      HistWatch.start(@@options[:mode])
+    end
+  end
+else
   puts "Logging to #{Dir.tmpdir}/HistoryCommanderDaemon.log"
   require 'simple-daemon'
   class HistoryCommanderDaemon < SimpleDaemon::Base
@@ -41,11 +81,4 @@ if @@options[:daemonize]
     end
   end
   HistoryCommanderDaemon.daemonize
-else
-  puts "History Commander running in foreground mode. CTRL-C to interrupt"
-  EM.run do
-    AMQP.start(:host => @@options[:amqp_host], :user => @@options[:user], :pass => @@options[:pass], :vhost => @@options[:vhost], :logging => @@options[:amqp_log]) do
-      HistWatch.start(@@options[:mode])
-    end
-  end
 end

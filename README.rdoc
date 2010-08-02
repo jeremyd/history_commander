@@ -2,9 +2,17 @@
 
 == Quick Start
 
-* 'gem install history_commander'
-* 'hc_setup_bashrc'
-* 'hc --help'
+  'gem install history_commander'
+Installs the history_commander gem.  To run 'hc' you must rubygems bin directory in your path
+
+  'hc_setup_bashrc'
+This installs bash history tweaks to your .bashrc
+
+  'hc configure --help'
+This will setup the .history_commander config file with your selected options
+
+  'hc start'
+Starts history_commander
 
 == Note on Patches/Pull Requests
  
